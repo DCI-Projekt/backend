@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema({
     password: { type: String, required: true },
     role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' },
     admin: { type: Boolean },
-    // events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Events' }]
+    events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Events' }]
 
 }, {timestamps: true});
 

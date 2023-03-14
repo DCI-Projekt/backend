@@ -14,11 +14,18 @@ User sollen die Möglichkeit haben sich zu registrieren, einzuloggen und an Even
 
 ## API Endpunkte
 
-- **GET** http://localhost:8080/events - Um alle Events Daten zu fetchen
-- **POST** http://localhost:8080/register - Um einen neuen User zu registrieren
-- **POST** http://localhost:8080/login - Um einen User einzuloggen
-- **POST**
-- **POST**
+- **POST** http://localhost:8080/protected/events - Erstelle ein neues Event (ADMIN)
+
+- **POST** http://localhost:8080/auth/register - Um einen neuen User zu registrieren
+- **POST** http://localhost:8080/auth/login - Um einen User einzuloggen
+
+- **GET** http://localhost:8080/auth/events - Um alle Events Daten zu fetchen
+
+- **PATCH** http://localhost:8080/protected/user/:id - Um Daten eines bestimmten Users zu ändern (ADMIN)
+- **PATCH** http://localhost:8080/protected/events/:id - Um Daten eines bestimmten Events zu ändern (ADMIN)
+
+- **DEL** http://localhost:8080/protected/user - Um einen User zu entfernen (ADMIN)
+- **DEL** http://localhost:8080/protected/event - Um einen Event zu entfernen (ADMIN)
 
 
 ## Daten Schemata

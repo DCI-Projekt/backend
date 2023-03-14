@@ -1,4 +1,5 @@
 import { Router } from "express";
+//noch funktionen importieren wenn geschrieben
 
 
 // neue Router Instanz
