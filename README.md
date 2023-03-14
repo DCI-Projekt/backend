@@ -15,6 +15,10 @@ User sollen die Möglichkeit haben sich zu registrieren, einzuloggen und an Even
 ## API Endpunkte
 
 - **GET** http://localhost:8080/events - Um alle Events Daten zu fetchen
+- **POST** http://localhost:8080/register - Um einen neuen User zu registrieren
+- **POST** http://localhost:8080/login - Um einen User einzuloggen
+- **POST**
+- **POST**
 
 
 ## Daten Schemata
