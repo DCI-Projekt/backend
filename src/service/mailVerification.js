@@ -4,9 +4,9 @@ let transporter;
 
 export async function startMailService(){
     transporter = nodemailer.createTransport({
-        host: "smtp.ionos.de",
-        port: 465,
-        secure: true,
+        host: "smtp-mail.outlook.com",
+        port: 587,
+        secure: false,
         auth: {
             user: process.env.EMAIL_SENDER,
             pass: process.env.EMAIL_SENDER_PW
@@ -26,7 +26,7 @@ export async function startMailService(){
 
 function sendVerificationEmail(userEmail, verificationToken) {
     let mailOptions = {
-        from: 'noreply@martindrus.de',
+        from: 'event-calender@outlook.com',
         to: userEmail,
         subject: 'Please verify your email',
         html: `<p>Please click on the following link to verify your email: <a href="http://localhost:4444/auth/verify-email?t=${verificationToken}" target="_blank">Verify Email</a></p>`

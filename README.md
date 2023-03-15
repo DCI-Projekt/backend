@@ -38,9 +38,9 @@ User:
 "role": "admin",
 "admin": "true",
 "events": [
-    "ID",
-    "ID",
-    "ID"
+    "event ID",
+    "event ID",
+    "event ID"
 ]
 
 ```
@@ -52,9 +52,9 @@ Event:
 "duration": "Date",
 "description": "Super nice italian pasta food event",
 "participant": [
-    "ID",
-    "ID",
-    "ID"
+    "user ID",
+    "user ID",
+    "user ID"
 ],
 "attending": 20
 
