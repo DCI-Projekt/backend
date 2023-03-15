@@ -11,6 +11,7 @@ function myRouteHandler(req, res, next) {
 
     next();
 }
+import { deleteEventById } from "../model/event.model.js";
 
 // Erstelle neue Router Instanz
 const protectedRouter = Router();
@@ -34,5 +35,19 @@ protectedRouter.route('/test').get((req,res) => {
 })
 
 
+
+
+//mit martin checken
+protectedRouter.route('user/id:').patch(updateUser);
+
+
+protectedRouter.route('events/id:').patch(updateEvent);
+
+
+protectedRouter.route('user/:id').delete()
+
+
+
+protectedRouter.route('event/:id').delete(deleteEventById)
 
 export default protectedRouter;
