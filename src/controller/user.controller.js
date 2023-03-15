@@ -151,3 +151,7 @@ export async function refreshNewVerification(req, res, next) {
 export async function getAllUsers(req, res) {
     res.send(await UserModel.getAll());
 }
+
+
+
+
