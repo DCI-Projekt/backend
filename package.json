@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Das Backend Projekt für eine Kalender-Event-App. User sollen die Möglichkeit haben sich zu registrieren, einzuloggen und an Events teil zu nehmen. Events sollen in einem privaten bzw. öffentlichen Kalender einsehbar sein.",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -28,5 +28,6 @@
     "mongodb": "^5.1.0",
     "mongoose": "^7.0.1",
     "nodemon": "^2.0.21"
-  }
+  },
+  "keywords": []
 }
