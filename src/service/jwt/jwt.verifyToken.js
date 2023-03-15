@@ -1,24 +1,28 @@
 import jwt from 'jsonwebtoken';
 
-// Middleware-Funktion zum Validieren von Tokens im Header
+/**
+ * Middleware-Funktion zum Überprüfen des JsonWebTokens in der Anforderung.
+ * Wenn kein Token in den Anforderungskopfzeilen vorhanden ist, wird ein Fehler zurückgegeben.
+ * Wenn der Token ungültig ist, wird ein Fehler zurückgegeben.
+ * Wenn der Token gültig ist, wird das Payload-Objekt in der Anforderung gespeichert und der nächste Handler aufgerufen.
+ * @param {Object} req - Das Anforderungsobjekt
+ * @param {Object} res - Das Antwortobjekt
+ * @param {Function} next - Die nächste Middleware- oder Route-Handler-Funktion
+ */
 function verifyToken(req, res, next) {
-    // Wenn Authorization im Header nicht gesetzt, breche ab und sende Fehler
-    if (!req.headers.authorization) return res.status(401).send({success: false, message: 'Token missing'});
-    // if (!req.cookies.access_token) return res.status(401).send({success: false, message: 'Token missing'});
-
-    // Extrahiere Token aus dem authorization Feld im HTTP Request Header
+    //if (!req.headers.authorization) return res.status(401).send({success: false, message: 'Token missing'});
+    // console.log(req.cookies);
+    // let cookieToken = req.cookies.access_token.split(' ')[1];
+    // console.log("🚀 ~ file: jwt.verifyToken.js:16 ~ verifyToken ~ cookieToken:", cookieToken)
     let token = req.headers.authorization.split(' ')[1];
-    // let token = req.cookies.access_token.split(' ')[1];
+    console.log("🚀 ~ file: jwt.verifyToken.js:18 ~ verifyToken ~ token:", token)
 
-    // Verifiziere extrahierten Token mittels Signaturpruefung
     jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
-        // Wenn Verifizierung fehlgeschlagen, brich ab und sende Fehler
+
         if (err) return res.status(401).send({success: false, message: 'Invalid token'});
 
-        // Alles gut, speichere payload im req-Objekt
         req.tokenPayload = payload;
 
-        // Fahre mit Anfrage fort
         next();
     });
 }

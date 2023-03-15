@@ -17,9 +17,9 @@ User sollen die Möglichkeit haben sich zu registrieren, einzuloggen und an Even
 - **POST** (ADMIN) http://localhost:8080/protected/events - Erstelle ein neues Event 
 
 - **POST** http://localhost:8080/auth/register - Um einen neuen User zu registrieren (ready)
-- **POST** http://localhost:8080/auth/login - Um einen User einzuloggen
+- **POST** http://localhost:8080/auth/login - Um einen User einzuloggen (ready *)
 
-- **GET** http://localhost:8080/auth/events - Um alle Events Daten zu fetchen
+- **GET** http://localhost:8080/auth/events - Um alle Events Daten zu fetchen 
 
 - **PATCH** (ADMIN) http://localhost:8080/protected/user/:id - Um Daten eines bestimmten Users zu ändern 
 - **PATCH** (ADMIN) http://localhost:8080/protected/events/:id - Um Daten eines bestimmten Events zu ändern
