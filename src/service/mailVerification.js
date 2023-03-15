@@ -29,7 +29,7 @@ function sendVerificationEmail(userEmail, verificationToken) {
         from: 'event-calender@outlook.com',
         to: userEmail,
         subject: 'Please verify your email',
-        html: `<p>Please click on the following link to verify your email: <a href="http://localhost:4444/auth/verify-email?t=${verificationToken}" target="_blank">Verify Email</a></p>`
+        html: `<p>Please click on the following link to verify your email: <a href="http://localhost:8080/auth/verify?t=${verificationToken}" target="_blank">Verify Email</a></p>`
       };
 
       transporter.sendMail(mailOptions, (err, info) => {

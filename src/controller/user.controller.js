@@ -2,6 +2,7 @@ import * as UserModel from "../model/user.model.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import sendVerificationEmail from '../service/mailVerification.js';
+import { generateJsonWebToken } from "../service/jwt/jwt.generateToken.js";
 import md5 from 'md5';
 
 // Controller Funktion zum Anlegen neuer User
@@ -15,15 +16,15 @@ export async function registerNewUser(req, res) {
     // Including Token to User DB
     body.verificationHash = verificationToken;
 
-    // Sending mail 
-    sendVerificationEmail(body.email, verificationToken)
-
     // Overwriting password-Property with its Hash
     body.password = bcrypt.hashSync(body.password, 10);
 
     try {
         // Calling Model-Function for inserting a new User
         await UserModel.insertNewUser(body);
+
+        // Sending mail 
+        sendVerificationEmail(body.email, verificationToken)
 
         // Sende Erfolgsmeldung zurueck
         res.send({success: true});
@@ -74,6 +75,56 @@ export async function login(req, res) {
             success: false,
             message: 'Incorrect username or password'
         });
+    }
+}
+
+export async function loginUser(req, res, next) {
+    let {username, email, password} = req.body;
+
+    try {
+        // Suche User per Username -> Falls nicht gefunden per Mail
+        let user = await UserModel.findUserByUsername(username);
+        if (!user) {
+            let user = await UserModel.findUserByMail(email);
+            if (!user) throw new Error("invalid username or password", {cause: 409}) 
+        }
+
+        const passwordMatches = bcrypt.compareSync(password, user.password);
+
+        if (passwordMatches) {
+
+            const minute = 60 * 1000;
+            const hour = 60 * minute;
+            const duration = 3 * hour;
+
+            let payload = {
+                id: user._id,
+                name: user.username
+            }
+
+            const token = generateJsonWebToken(payload, duration);
+
+            let options = {
+                httpOnly: true,
+                expires: new Date(Date.now() + duration)
+            }
+
+            res.cookie('access_token', `Bearer ${token}`, options)
+                
+            res.status(200).json({
+                    success: true,
+                    message: `User ${user.username} logged in successfully!`,
+                })
+
+        } else throw new Error("invalid username or password", {cause: 409}) 
+
+    } catch (error) {
+        console.log(error)
+        if(!error.code) {
+            error.code = 418;
+            error.message = "unbekannter fehler"
+        }
+        res.status(error.code).send(error.message)
     }
 }
 
