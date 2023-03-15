@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { registerNewUser, login, editOwnProfile, verifyEmail, refreshNewVerification } from "../controller/user.controller.js";
+import verifyToken from "../service/jwt.verifyToken.js";
 
 
 // neue Router Instanz
