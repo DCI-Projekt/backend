@@ -113,6 +113,7 @@ export async function loginUser(req, res, next) {
 
             // Erstelle Token mit den Nutzerdaten
             const token = generateJsonWebToken(payload, duration);
+            console.log("🚀 ~ file: user.controller.js:116 ~ loginUser ~ token:", token)
 
             // Konfiguration für das Cookie
             let options = {
@@ -141,7 +142,7 @@ export async function loginUser(req, res, next) {
     }
 }
 
-// Funktion zum Aktualisieren eines Benutzers
+// Funktion zum Aktualisieren eines Benutzers (ADMIN only)
 export async function updateUser(req, res){
     let userId = req.params.id
     let body = req.body;
@@ -201,8 +202,14 @@ export async function verifyEmail(req, res, next) {
     const emailToken = req.query.t;
 
     try {
+
         await UserModel.verifyUser(emailToken);
         res.status(200).send({success: true})
+
+        // res.status(401).send({
+        //     redirectTo: 'http://localhost:5173/login', // ?????
+        //     message: 'E-Mail verification token invalid'
+        // });
 
     } catch (error) {
         if(!error.cause) res.status(400).send(error.message)
@@ -212,6 +219,10 @@ export async function verifyEmail(req, res, next) {
 }
 
 export async function refreshNewVerification(req, res, next) {
+
+}
+
+export async function deleteUserById(userId) {
 
 }
 

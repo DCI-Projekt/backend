@@ -49,8 +49,6 @@ export async function getEventsOfMonth(req, res) {
     }
 }
 
-
-
 export async function updateEvent(req, res){
     let eventId = req.params.id
     let body = req.body;
@@ -75,7 +73,7 @@ export async function deleteEventById(req, res) {
     let id = req.params.id;
 
     try {
-        let response = await EventModel.deleteEventById(id)
+        let response = await EventModel.deleteEvent(id)
         console.log("🚀 ~ file: event.controller.js:41 ~ deleteEventById ~ response:", response)
         res.send(response);
 
