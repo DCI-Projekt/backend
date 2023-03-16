@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { getAllUsers, updateUser, deleteUserById } from "../controller/user.controller.js";
-import { updateEvent, deleteEventById, registerNewEvent } from "../controller/event.controller.js";
+import { getAllUsers, updateUser, deleteUserById  } from "../controller/user.controller.js";
+import { updateEvent, deleteEventById, registerNewEvent, getAllEvents } from "../controller/event.controller.js";
 import { eventValidationMiddleware } from "../service/validation/eventValidationSchema.js";
 import { validationResult } from 'express-validator';
 import authorizeAdmin from "../service/authorizeAdmin.js";
@@ -32,7 +32,6 @@ protectedRouter.route('/user')
 // Routen Definition fuer root
 protectedRouter.route('/user/:id')
     .patch(updateUser)
-    .delete(deleteUserById)
 
 //!-----EVENTS-----
 

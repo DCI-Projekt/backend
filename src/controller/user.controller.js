@@ -172,9 +172,20 @@ export async function refreshNewVerification(req, res, next) {
 
 }
 
-export async function deleteUserById(userId) {
+//delete User
+export async function deleteUserById(req, res) {
+    let id = req.params.id;
 
+    try {
+        res.send(await userModel.deleteUserById(id));
+
+    } catch (error) {
+        res.status(404).send({
+            error: error.message
+        });
+    }
 }
+
 
 export async function getAllUsers(req, res) {
     res.send(await UserModel.getAll());
