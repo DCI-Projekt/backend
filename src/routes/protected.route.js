@@ -1,17 +1,18 @@
 import { Router } from "express";
-import { getAllUsers, updateUser } from "../controller/user.controller.js";
+import { getAllUsers, updateUser, deleteUserById } from "../controller/user.controller.js";
+import { getAllEvents, updateEvent, deleteEventById } from "../controller/event.controller.js";
 import authorizeAdmin from "../service/authorizeAdmin.js";
 import verifyToken from "../service/jwt/jwt.verifyToken.js";
 
-function myRouteHandler(req, res, next) {  
+function myRouteHandler(req, res, next) {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ errors: errors.array() });
     }
 
     next();
 }
-import { deleteEventById } from "../model/event.model.js";
+
 
 // Erstelle neue Router Instanz
 const protectedRouter = Router();
@@ -26,8 +27,9 @@ protectedRouter.route('/user')
 // Routen Definition fuer root
 protectedRouter.route('/user/:id')
     .patch(updateUser)
+    .delete(deleteUserById)
 
-protectedRouter.route('/test').get((req,res) => {
+protectedRouter.route('/test').get((req, res) => {
     res.send({
         success: true,
         data: req.tokenPayload
@@ -38,16 +40,12 @@ protectedRouter.route('/test').get((req,res) => {
 
 
 //mit martin checken
-protectedRouter.route('user/id:').patch(updateUser);
 
 
-protectedRouter.route('events/id:').patch(updateEvent);
+protectedRouter.route('events/id:').patch(updateEvent)
+    .delete(deleteEventById)
 
 
-protectedRouter.route('user/:id').delete()
-
-
-
-protectedRouter.route('event/:id').delete(deleteEventById)
+protectedRouter.route('event/:id')
 
 export default protectedRouter;

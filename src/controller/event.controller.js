@@ -20,8 +20,8 @@ export async function updateEvent(req, res){
 }
 
 
-//delete event 
 
+//delete Event
 export async function deleteEventById(req, res) {
     let id = req.params.id;
 
@@ -33,4 +33,9 @@ export async function deleteEventById(req, res) {
             error: error.message
         });
     }
+}
+
+
+export async function getAllEvents(req, res) {
+    res.send(await EventModel.getAll());
 }
