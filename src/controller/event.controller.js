@@ -31,8 +31,10 @@ export async function getAllEvents(req, res) {
 }
 
 export async function getEventsOfMonth(req, res) {
-
+    // Extrahiere den Monat aus dem URL Parameter und speichere ihn in der Variable "month"
     let month = parseInt(req.params.month)
+    // Falls kein Monat im URL Parameter enthalten ist, wird der aktuelle Monat verwendet
+    if (!month) month = new Date().getMonth()+1;
 
     try {
         if(month < 1 || month > 12) throw new Error('Invalid month', {cause: 400})
@@ -46,6 +48,7 @@ export async function getEventsOfMonth(req, res) {
         else res.status(error.cause).send(error.message)
     }
 }
+
 
 
 export async function updateEvent(req, res){

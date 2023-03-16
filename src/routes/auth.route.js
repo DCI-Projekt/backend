@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validationResult } from 'express-validator';
 import { loginUser, refreshNewVerification, registerNewUser, verifyEmail } from "../controller/user.controller.js";
-import { getAllEvents, getEventsOfMonth } from "../controller/event.controller.js";
+import { getAllEvents, getEventsOfMonth, getEventsOfActualMonth } from "../controller/event.controller.js";
 import { userValidationMiddleware } from '../service/validation/userValidationSchema.js';
 
 // Benutzerdefinierte Middleware, um Validierungsfehler zu behandeln
@@ -39,6 +39,5 @@ authRouter.route('/events')
 // Get the events of the month
 authRouter.route('/events/:month')
     .get(getEventsOfMonth)
-
 
 export default authRouter;

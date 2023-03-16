@@ -14,12 +14,15 @@ User sollen die Möglichkeit haben sich zu registrieren, einzuloggen und an Even
 
 ## API Endpunkte
 
-- **POST** (ADMIN) http://localhost:8080/protected/events - Erstelle ein neues Event 
+- **POST** (ADMIN) http://localhost:8080/protected/events - Erstelle ein neues Event (ready)
 
 - **POST** http://localhost:8080/auth/register - Um einen neuen User zu registrieren (ready)
 - **POST** http://localhost:8080/auth/login - Um einen User einzuloggen (ready *)
 
-- **GET** http://localhost:8080/auth/events - Um alle Events Daten zu fetchen 
+- **GET** http://localhost:8080/auth/events - Um alle Events zu fetchen (ready)
+- **GET** http://localhost:8080/auth/events/:month - (1-12) Um Events eines Monats zu fetchen (ready)
+- **GET** http://localhost:8080/auth/events/now - Um Events des aktuellen Monats zu fetchen (ready)
+
 
 - **PATCH** (ADMIN) http://localhost:8080/protected/user/:id - Um Daten eines bestimmten Users zu ändern 
 - **PATCH** (ADMIN) http://localhost:8080/protected/events/:id - Um Daten eines bestimmten Events zu ändern
@@ -27,6 +30,7 @@ User sollen die Möglichkeit haben sich zu registrieren, einzuloggen und an Even
 - **DEL** (ADMIN) http://localhost:8080/protected/user - Um einen User zu entfernen
 - **DEL** (ADMIN) http://localhost:8080/protected/event - Um einen Event zu entfernen
 
+*cookies aktivieren
 
 ## Daten Schemata
 
@@ -65,6 +69,15 @@ Rolle:
 "name": "User",
 
 ```
+
+## TODOS
+
+1. route that a user can attend to an event
+2. refreshNewVerification
+3. modify event
+4. delete event
+5. Token gültigkeit prüfen
+6. testen
 
 
 

@@ -60,7 +60,6 @@ export async function getAll() {
 }
 
 export async function getEventsOfMonth(month) {
-    console.log("🚀 ~ file: event.model.js:63 ~ getEventsOfMonth ~ month:", month)
     // Konvertiert den Monat in eine Zahl und fügt ggf. eine führende Null hinzu wenn nötig
     let nextMonth = month+1;
     if(nextMonth === 13) nextMonth = 1
