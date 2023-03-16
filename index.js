@@ -18,7 +18,7 @@ const app = express();
 
 // Middleware fuer das body-Parsing
 app.use(express.json());
-// app.use(cookieParser());
+app.use(cookieParser());
 
 
 // Middleware fuer CROSS-ORIGIN-REQUEST

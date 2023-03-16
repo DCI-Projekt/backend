@@ -11,13 +11,12 @@ import jwt from 'jsonwebtoken';
  */
 function verifyToken(req, res, next) {
     //if (!req.headers.authorization) return res.status(401).send({success: false, message: 'Token missing'});
-    // console.log(req.cookies);
-    // let cookieToken = req.cookies.access_token.split(' ')[1];
-    // console.log("🚀 ~ file: jwt.verifyToken.js:16 ~ verifyToken ~ cookieToken:", cookieToken)
-    let token = req.headers.authorization.split(' ')[1];
-    console.log("🚀 ~ file: jwt.verifyToken.js:18 ~ verifyToken ~ token:", token)
+    let cookieToken = req.cookies.access_token.split(' ')[1];
+    console.log("🚀 ~ file: jwt.verifyToken.js:16 ~ verifyToken ~ cookieToken:", cookieToken)
+    // let token = req.headers.authorization.split(' ')[1];
+    // console.log("🚀 ~ file: jwt.verifyToken.js:18 ~ verifyToken ~ token:", token)
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
+    jwt.verify(cookieToken, process.env.JWT_SECRET, (err, payload) => {
 
         if (err) return res.status(401).send({success: false, message: 'Invalid token'});
 

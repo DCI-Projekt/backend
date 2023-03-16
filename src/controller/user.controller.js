@@ -78,7 +78,9 @@ export async function loginUser(req, res, next) {
             }
 
             // Setze Cookie mit Token
-            res.status(200).cookie('access_token', `Bearer ${token}`, options).send({
+            res.cookie('access_token', `Bearer ${token}`, options)
+            
+            res.json({
                 success: true,
                 message: `User ${user.username} logged in successfully!`,
             })

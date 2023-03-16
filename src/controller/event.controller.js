@@ -2,6 +2,8 @@ import * as EventModel from "../model/event.model.js";
 
 export async function registerNewEvent(req, res) {
     let body = req.body;
+    console.log("🚀 ~ file: event.controller.js:5 ~ registerNewEvent ~ body:", body)
+
 
     try {
         // Die "insertNewEvent"-Funktion in "EventModel" wird aufgerufen, um ein neues Event zu erstellen
