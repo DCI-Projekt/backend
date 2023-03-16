@@ -86,7 +86,3 @@ export async function deleteEventById(req, res) {
     }
 }
 
-
-export async function getAllEvents(req, res) {
-    res.send(await EventModel.getAll());
-}
