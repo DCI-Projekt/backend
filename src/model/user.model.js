@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema({
     password: { type: String, required: true }, // Das Passwort ist ein String und erforderlich
     role: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' }, // Die Benutzerrolle ist ein Verweis auf ein "Role"-Objekt
     admin: { type: Boolean }, // Der "admin"-Status ist ein Boolean-Wert
-    events: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Events' }], // Die "events"-Liste ist ein Verweis auf eine Liste von "Events"-Objekten
+    events: [{type: mongoose.Types.ObjectId, ref: 'Event'}], // Die "events"-Liste ist ein Verweis auf eine Liste von "Events"-Objekten
     verificationHash: { type: String } // Der Verifizierungs-Hash ist ein String
 }, {timestamps: true});
 
@@ -15,12 +15,17 @@ const User = mongoose.model('User', userSchema);
 
 // Findet einen Benutzer anhand des Benutzernamens
 export async function findUserByUsername(username) {
-    return await User.findOne({username: username});
+    return await User.findOne({username: username}).populate('events');
+}
+
+// Findet einen Benutzer anhand des Benutzernamens
+export async function findUserByUserId(userId) {
+    return await User.findOne({_id: userId}).populate('events');
 }
 
 // Findet einen Benutzer anhand der E-Mail-Adresse
 export async function findUserByMail(email) {
-    return await User.findOne({email: email});
+    return await User.findOne({email: email}).populate('events');
 }
 
 // Verifiziert einen Benutzer anhand des E-Mail-Hashs
@@ -65,8 +70,15 @@ export async function modifyUser(userId, body){
     return await User.findByIdAndUpdate(userId, body)
 }
 
+export async function addEventToUser(eventId, userId) {
+    let user = await findUserByUserId(userId);
+
+    if(!user) throw new Error(`User with ID: ${userId} not found!`)
+
+}
+
 
 
 export async function getAll() {
-    return await User.find();
+    return await User.find().populate('events');
 }

@@ -23,12 +23,13 @@ User sollen die Möglichkeit haben sich zu registrieren, einzuloggen und an Even
 - **GET** http://localhost:8080/auth/events/:month - (1-12) Um Events eines Monats zu fetchen (ready)
 - **GET** http://localhost:8080/auth/events/now - Um Events des aktuellen Monats zu fetchen (ready)
 
+- **PATCH** (USER) http://localhost:8080/auth/events/attend/:eventId - Um an einem Event teil zu nehmen
 
-- **PATCH** (ADMIN) http://localhost:8080/protected/user/:id - Um Daten eines bestimmten Users zu ändern 
-- **PATCH** (ADMIN) http://localhost:8080/protected/events/:id - Um Daten eines bestimmten Events zu ändern
+- **PATCH** (ADMIN) http://localhost:8080/protected/user/:userId - Um Daten eines bestimmten Users zu ändern (ready)
+- **PATCH** (ADMIN) http://localhost:8080/protected/events/:eventId - Um Daten eines bestimmten Events zu ändern (ready)
 
-- **DEL** (ADMIN) http://localhost:8080/protected/user - Um einen User zu entfernen
-- **DEL** (ADMIN) http://localhost:8080/protected/event - Um einen Event zu entfernen
+- **DEL** (ADMIN) http://localhost:8080/protected/user/:userId  - Um einen User zu entfernen
+- **DEL** (ADMIN) http://localhost:8080/protected/events/:eventId - Um einen Event zu entfernen (ready)
 
 *cookies aktivieren
 

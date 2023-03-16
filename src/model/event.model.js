@@ -7,7 +7,8 @@ const eventSchema = mongoose.Schema({
     beginning: { type: Date, required: true},
     duration: { type: Number, required: true},
     description: {type: String, required: true},
-    participant: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    location: {type: String, required: true},
+    participants: [{type: mongoose.Types.ObjectId, ref: 'User'}],
     attending: {type: Number}
 },{ timestamps: true });
 
@@ -18,7 +19,12 @@ const Event = mongoose.model('Event', eventSchema);
 
 // DB-Funktion zum Abrufen eines bestimmten Event-Eintrags per Event-Titel
 export async function findEventByEventTitle(eventTitle) {
-    return await Event.findOne({eventTitle: eventTitle}).populate('Events');
+    return await Event.findOne({eventTitle: eventTitle}).populate('participants');
+}
+
+// DB-Funktion zum Abrufen eines bestimmten Event-Eintrags per Event-Titel
+export async function findEventId(eventId) {
+    return await Event.findOne({_id: eventId}).populate('participants');
 }
 
 
@@ -52,10 +58,9 @@ export async function insertNewEvent(eventBody) {
     }
 }
 
-
 // DB-Funktion zum Abrufen aller Event-Eintraege
 export async function getAll() {
-    return await Event.find();
+    return await Event.find().populate('participants');
 }
 
 export async function getEventsOfMonth(month) {
@@ -78,4 +83,20 @@ export async function modifyEvent(eventId, body) {
 
 export async function deleteEvent(eventId) {
     return await Event.deleteOne({_id:eventId})
+}
+
+export async function attendToEventById(eventId, userId){
+    let event = await findEventId(eventId);
+
+    if(!event) throw new Error(`Event with ID: ${eventId} not found!`, {cause: 404})
+
+    event.participants.push(userId);
+
+    addEventToUser(eventId, userId)
+
+    await event.save();
+
+    return await findEventId(eventId);
+
+
 }

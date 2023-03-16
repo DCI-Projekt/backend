@@ -1,8 +1,10 @@
 import { Router } from "express";
 import { validationResult } from 'express-validator';
 import { loginUser, refreshNewVerification, registerNewUser, verifyEmail } from "../controller/user.controller.js";
-import { getAllEvents, getEventsOfMonth } from "../controller/event.controller.js";
+import { getAllEvents, getEventsOfMonth, attendToEvent } from "../controller/event.controller.js";
 import { userValidationMiddleware } from '../service/validation/userValidationSchema.js';
+import verifyToken from "../service/jwt/jwt.verifyToken.js";
+
 
 // Benutzerdefinierte Middleware, um Validierungsfehler zu behandeln
 function myRouteHandler(req, res, next) {
@@ -38,8 +40,12 @@ authRouter.route('/verify')
 // Get all Events
 authRouter.route('/events')
     .get(getAllEvents)
+
 // Get the events of the month
 authRouter.route('/events/:month')
     .get(getEventsOfMonth)
+
+authRouter.route('/events/attend/:id')
+    .patch(verifyToken, attendToEvent)
 
 export default authRouter;

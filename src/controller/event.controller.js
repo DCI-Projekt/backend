@@ -68,7 +68,6 @@ export async function updateEvent(req, res){
     }
 }
 
-
 export async function deleteEventById(req, res) {
     let id = req.params.id;
 
@@ -82,4 +81,19 @@ export async function deleteEventById(req, res) {
         if(!error.cause) res.status(400).send(error.message)
         else res.status(error.cause).send(error.message)
     }
+}
+
+export async function attendToEvent(req, res) {
+    const userId = req.tokenPayload.id;
+    const eventId = req.params.id;
+
+    try {
+        let response = await EventModel.attendToEventById(eventId, userId)
+        res.send(response);
+    } catch (error) {
+        // Wenn ein Fehler auftritt, wird eine entsprechende Fehlermeldung an den Client gesendet
+        if(!error.cause) res.status(400).send(error.message)
+        else res.status(error.cause).send(error.message)
+    }
+
 }

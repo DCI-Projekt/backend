@@ -28,7 +28,7 @@ export async function registerNewUser(req, res) {
         sendVerificationEmail(body.email, verificationToken)
 
         // Sende Erfolgsmeldung zurueck
-        res.send({success: true});
+        res.send("Registration successful - Please check your Mails ");
 
     } catch (error) {
         if(!error.cause) res.status(400).send(error.message)
@@ -36,61 +36,17 @@ export async function registerNewUser(req, res) {
     }
 }
 
-// Controller Funktion zum Einloggen bestehender User
-export async function login(req, res) {
-    // extrahiere Properties aus dem body
-    let { username, password } = req.body;
-
-    // Hole entsprechenden User per username aus der DB
-    let user = await UserModel.findUserByUsername(username);
-
-    // Wenn user nicht gefunden wurde
-    if (user === null) {
-        // Sende 401 (UNAUTHORIZED) mit Nachricht
-        res.status(401).send({
-            success: false,
-            message: 'Incorrect username or password'
-        });
-        // early return
-        return;
-    }
-
-    // Vergleiche uebermitteltes password mit dem gehashten password aus der DB
-    if (bcrypt.compareSync(password, user.password)) {
-        // Erstelle neuen JWT Token mit payload und Verfall nach einer Stunde (60 Minuten * 60 Sekunden)
-        let token = jwt.sign({ userId: user._id, username: user.username, role: user.role.name }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        // Sende Erfolgsnachricht sowie neuen Token zurueck
-        res.send({
-                success: true,
-                message: `User ${user.username} logged in successfully!`,
-                id: user._id,
-                fullname: user.fullname,
-                role: user.role.name,
-                token: token
-            });
-
-    } else {
-        // Passwort falsch -> Sende Fehlermeldung zurueck
-        res.status(401).send({
-            success: false,
-            message: 'Incorrect username or password'
-        });
-    }
-}
-
 // Funktion zum Einloggen eines Nutzers
 export async function loginUser(req, res, next) {
-    let {username, email, password} = req.body;
+    let {login, password} = req.body;
 
     try {
         // Suche User per Username -> Falls nicht gefunden per Mail
-        let user = await UserModel.findUserByUsername(username);
+        let user = await UserModel.findUserByUsername(login);
         if (!user) {
-            let user = await UserModel.findUserByMail(email);
+            user = await UserModel.findUserByMail(login);
             if (!user) throw new Error("invalid username or password", {cause: 409}) 
         }
-
         // Überprüfe, ob das Passwort korrekt ist
         const passwordMatches = bcrypt.compareSync(password, user.password);
 
@@ -122,23 +78,17 @@ export async function loginUser(req, res, next) {
             }
 
             // Setze Cookie mit Token
-            res.cookie('access_token', `Bearer ${token}`, options)
-                
-            // Sende Bestätigungsnachricht
-            res.status(200).json({
-                    success: true,
-                    message: `User ${user.username} logged in successfully!`,
-                })
+            res.status(200).cookie('access_token', `Bearer ${token}`, options).send({
+                success: true,
+                message: `User ${user.username} logged in successfully!`,
+            })
 
         } else throw new Error("invalid username or password", {cause: 409}) 
 
     } catch (error) {
-        console.log(error)
-        if(!error.code) {
-            error.code = 418;
-            error.message = "unbekannter fehler"
-        }
-        res.status(error.code).send(error.message)
+        // Fehlerbehandlung
+        if(!error.cause) res.status(400).send(error.message)
+        else res.status(error.cause).send(error.message)
     }
 }
 
