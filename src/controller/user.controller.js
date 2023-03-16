@@ -1,4 +1,5 @@
 import * as UserModel from "../model/user.model.js";
+import { findById } from "../model/role.model.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import sendVerificationEmail from '../service/mailVerification.js';
@@ -78,6 +79,7 @@ export async function login(req, res) {
     }
 }
 
+// Funktion zum Einloggen eines Nutzers
 export async function loginUser(req, res, next) {
     let {username, email, password} = req.body;
 
@@ -89,28 +91,39 @@ export async function loginUser(req, res, next) {
             if (!user) throw new Error("invalid username or password", {cause: 409}) 
         }
 
+        // Überprüfe, ob das Passwort korrekt ist
         const passwordMatches = bcrypt.compareSync(password, user.password);
 
         if (passwordMatches) {
 
+            // Suche Rolle des Nutzers anhand der ID
+            const userRole = await findById(user.role);
+
+            // Setze Ablaufzeit für das Token auf 3 Stunden
             const minute = 60 * 1000;
             const hour = 60 * minute;
             const duration = 3 * hour;
 
+            // Payload mit den Nutzerdaten für das Token
             let payload = {
                 id: user._id,
-                name: user.username
+                name: user.username,
+                role: userRole
             }
 
+            // Erstelle Token mit den Nutzerdaten
             const token = generateJsonWebToken(payload, duration);
 
+            // Konfiguration für das Cookie
             let options = {
                 httpOnly: true,
                 expires: new Date(Date.now() + duration)
             }
 
+            // Setze Cookie mit Token
             res.cookie('access_token', `Bearer ${token}`, options)
                 
+            // Sende Bestätigungsnachricht
             res.status(200).json({
                     success: true,
                     message: `User ${user.username} logged in successfully!`,
@@ -128,6 +141,7 @@ export async function loginUser(req, res, next) {
     }
 }
 
+// Funktion zum Aktualisieren eines Benutzers
 export async function updateUser(req, res){
     let userId = req.params.id
     let body = req.body;
@@ -147,16 +161,17 @@ export async function updateUser(req, res){
     }
 
     try {
-
+        // Benutzer aktualisieren
         let response = await UserModel.modifyUser(userId, body)
         res.send(response)
         
     } catch (error) {
+        // Fehlerbehandlung
         if(!error.cause) res.status(400).send(error.message)
         else res.status(error.cause).send(error.message)
     }
-
 }
+
 
 export async function editOwnProfile(req, res) {
 
@@ -181,6 +196,7 @@ export async function editOwnProfile(req, res) {
     }
 }
 
+// Verifiziert die E-Mail-Adresse eines Benutzers anhand des übergebenen Tokens
 export async function verifyEmail(req, res, next) {
     const emailToken = req.query.t;
 

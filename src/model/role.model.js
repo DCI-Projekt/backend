@@ -51,13 +51,19 @@ export async function getAll() {
 
 export async function findByName(name) {
     const role = await Role.findOne({name: name});
-
     if (role === null) throw {
         code: 404,
         message: `No such Role found: ${name}`
     };
-
     return role;
 }
 
+export async function findById(id) {
+    const role = await Role.findOne({_id: id});
+    if (role === null) throw {
+        code: 404,
+        message: `No such Role found: ${id}`
+    };
+    return role.name;
+}
 
