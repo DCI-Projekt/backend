@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validationResult } from 'express-validator';
 import { loginUser, refreshNewVerification, registerNewUser, verifyEmail } from "../controller/user.controller.js";
-import { getAllEvents, getEventsOfMonth, } from "../controller/event.controller.js";
+import { getAllEvents, getEventsOfMonth } from "../controller/event.controller.js";
 import { userValidationMiddleware } from '../service/validation/userValidationSchema.js';
 
 // Benutzerdefinierte Middleware, um Validierungsfehler zu behandeln
@@ -31,6 +31,8 @@ authRouter.route('/login')
 authRouter.route('/verify')
     .get(verifyEmail)
     .put(refreshNewVerification);
+
+//todo - modify own profil?
 
 //!-----EVENTS-----
 // Get all Events

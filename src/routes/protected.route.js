@@ -32,14 +32,13 @@ protectedRouter.route('/user')
 // Routen Definition fuer root
 protectedRouter.route('/user/:id')
     .patch(updateUser)
-    .delete(deleteUserById)
 
 //!-----EVENTS-----
 
 protectedRouter.route('/events')
     .post([eventValidationMiddleware, myRouteHandler], registerNewEvent);
 
-protectedRouter.route('/events/id:')
+protectedRouter.route('/events/:id')
     .patch(updateEvent)
     .delete(deleteEventById)
 

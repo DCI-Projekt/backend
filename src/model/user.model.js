@@ -26,9 +26,14 @@ export async function findUserByMail(email) {
 // Verifiziert einen Benutzer anhand des E-Mail-Hashs
 export async function verifyUser(emailHash) {
 
+    // Datumsobjekt fuer JETZT
+    const now = new Date();
+
     const role = await RoleModel.findByName(RoleModel.rolesEnum.user); // Findet die "user"-Rolle
 
     let user = await User.findOne({verificationHash: emailHash}); // Findet den Benutzer mit dem angegebenen E-Mail-Hash
+
+    if (now - user.updatedAt > (12 * 60 * 30 * 1000)) throw new Error('Token expired', {cause: 409}) // Wenn kein User gefunden ODER letztes Update des Eintrags laenger als 12 Stunden her
 
     if (!user) throw new Error('Token invalid', {cause: 409}) // Wenn der Benutzer nicht gefunden wurde, wirft die Funktion einen Fehler mit dem Statuscode 409 (Conflict)
 
@@ -55,6 +60,12 @@ export async function insertNewUser(userBody) {
         } else throw new Error('unknown problem - todo', {cause: 400})
     }
 }
+
+export async function modifyUser(userId, body){
+    return await User.findByIdAndUpdate(userId, body)
+}
+
+
 
 export async function getAll() {
     return await User.find();

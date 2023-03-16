@@ -74,9 +74,9 @@ Rolle:
 
 1. route that a user can attend to an event
 2. refreshNewVerification
-3. modify event
-4. delete event
-5. Token gültigkeit prüfen
+3. [x] modify event
+4. [x] delete event
+5. [x] Token gültigkeit prüfen
 6. testen
 
 

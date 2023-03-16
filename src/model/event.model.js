@@ -22,7 +22,6 @@ export async function findEventByEventTitle(eventTitle) {
 }
 
 
-
 // DB-Funktion zum Erstellen eines neuen Event-Eintrags
 export async function insertNewEvent(eventBody) {
     try {
@@ -74,5 +73,9 @@ export async function getEventsOfMonth(month) {
 }
 
 export async function modifyEvent(eventId, body) {
-    
+    return await Event.findByIdAndUpdate(eventId, body)
+}
+
+export async function deleteEvent(eventId) {
+    return await Event.deleteOne({_id:eventId})
 }
