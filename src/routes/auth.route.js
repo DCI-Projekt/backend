@@ -4,6 +4,7 @@ import { loginUser, refreshNewVerification, registerNewUser, verifyEmail } from 
 import { getAllEvents, getEventsOfMonth, attendToEvent } from "../controller/event.controller.js";
 import { userValidationMiddleware } from '../service/validation/userValidationSchema.js';
 import verifyToken from "../service/jwt/jwt.verifyToken.js";
+import checkRole from "../service/authorization/checkRole.js";
 
 
 // Benutzerdefinierte Middleware, um Validierungsfehler zu behandeln
@@ -34,18 +35,26 @@ authRouter.route('/verify')
     .get(verifyEmail)
     .put(refreshNewVerification);
 
+authRouter.route('/reverify')
+    .get(verifyToken, refreshNewVerification)
+
 //todo - modify own profil?
 
 //!-----EVENTS-----
 // Get all Events
-authRouter.route('/events')
+authRouter.route('/events/all')
     .get(getAllEvents)
 
 // Get the events of the month
 authRouter.route('/events/:month')
-    .get(getEventsOfMonth)
+    .get(verifyToken, getEventsOfMonth)
 
 authRouter.route('/events/attend/:id')
     .patch(verifyToken, attendToEvent)
+
+authRouter.route('/status')
+    .get(verifyToken, checkRole)
+
+
 
 export default authRouter;

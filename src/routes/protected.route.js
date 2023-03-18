@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { getAllUsers, updateUser, deleteUserById  } from "../controller/user.controller.js";
-import { updateEvent, deleteEventById, registerNewEvent, getAllEvents } from "../controller/event.controller.js";
-import { eventValidationMiddleware } from "../service/validation/eventValidationSchema.js";
 import { validationResult } from 'express-validator';
-import authorizeAdmin from "../service/authorizeAdmin.js";
+import { deleteEventById, registerNewEvent, updateEvent } from "../controller/event.controller.js";
+import { getAllUsers, updateUser } from "../controller/user.controller.js";
+import authorizeAdmin from "../service/authorization/authorizeAdmin.js";
 import verifyToken from "../service/jwt/jwt.verifyToken.js";
+import { eventValidationMiddleware } from "../service/validation/eventValidationSchema.js";
 
 // Benutzerdefinierte Middleware, um Validierungsfehler zu behandeln
 function myRouteHandler(req, res, next) {

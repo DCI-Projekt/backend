@@ -1,4 +1,4 @@
-import { rolesEnum } from "../model/role.model.js";
+import { rolesEnum } from "../../model/role.model.js";
 
 // Middleware-Funktion zum Authorisieren der admins
 function authorizeAdmin(req, res, next) {

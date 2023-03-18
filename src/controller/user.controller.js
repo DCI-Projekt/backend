@@ -1,5 +1,5 @@
 import * as UserModel from "../model/user.model.js";
-import { findById } from "../model/role.model.js";
+import { findById, findByName } from "../model/role.model.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import sendVerificationEmail from '../service/mailVerification.js';
@@ -22,13 +22,45 @@ export async function registerNewUser(req, res) {
 
     try {
         // Calling Model-Function for inserting a new User
-        await UserModel.insertNewUser(body);
+        let user = await UserModel.insertNewUser(body);
+        
+        // Suche Rolle des Nutzers anhand der ID
+        const userRole = await findByName('unverified');
+
+        // Setze Ablaufzeit für das Token auf 3 Stunden
+        const minute = 60 * 1000;
+        const hour = 60 * minute;
+        const duration = hour;
+
+        // Payload mit den Nutzerdaten für das Token
+        let payload = {
+            id: user._id,
+            name: user.username,
+            role: userRole.name
+        }
+
+        // Erstelle Token mit den Nutzerdaten
+        const token = generateJsonWebToken(payload, duration);
+        console.log("🚀 ~ file: user.controller.js:116 ~ loginUser ~ token:", token)
+
 
         // Sending mail 
         sendVerificationEmail(body.email, verificationToken)
 
+        // Konfiguration für das Cookie
+        let options = {
+            httpOnly: true,
+            expires: new Date(Date.now() + duration)
+        }
+
+        // Setze Cookie mit Token
+        res.cookie('access_token', `Bearer ${token}`, options)
+
         // Sende Erfolgsmeldung zurueck
-        res.send("Registration successful - Please check your Mails ");
+        res.json({
+            success: true,
+            message: `"Registration successful - Please check your Mails "`,
+        })
 
     } catch (error) {
         if(!error.cause) res.status(400).send(error.message)
@@ -64,8 +96,9 @@ export async function loginUser(req, res, next) {
             let payload = {
                 id: user._id,
                 name: user.username,
-                role: userRole
+                role: userRole.name
             }
+            console.log("🚀 ~ file: user.controller.js:101 ~ loginUser ~ payload:", payload)
 
             // Erstelle Token mit den Nutzerdaten
             const token = generateJsonWebToken(payload, duration);
@@ -80,7 +113,7 @@ export async function loginUser(req, res, next) {
             // Setze Cookie mit Token
             res.cookie('access_token', `Bearer ${token}`, options)
             
-            res.json({
+            res.send({
                 success: true,
                 message: `User ${user.username} logged in successfully!`,
             })
@@ -156,12 +189,7 @@ export async function verifyEmail(req, res, next) {
     try {
 
         await UserModel.verifyUser(emailToken);
-        res.status(200).send({success: true})
-
-        // res.status(401).send({
-        //     redirectTo: 'http://localhost:5173/login', // ?????
-        //     message: 'E-Mail verification token invalid'
-        // });
+        res.redirect('http://localhost:3000/login');
 
     } catch (error) {
         if(!error.cause) res.status(400).send(error.message)
@@ -171,6 +199,8 @@ export async function verifyEmail(req, res, next) {
 }
 
 export async function refreshNewVerification(req, res, next) {
+    const jwtPayload = req.tokenPayload;
+    console.log("🚀 ~ file: user.controller.js:170 ~ refreshNewVerification ~ jwtPayload:", jwtPayload)
 
 }
 
@@ -179,12 +209,11 @@ export async function deleteUserById(req, res) {
     let id = req.params.id;
 
     try {
-        res.send(await userModel.deleteUserById(id));
+        res.send(await UserModel.deleteUserById(id));
 
     } catch (error) {
-        res.status(404).send({
-            error: error.message
-        });
+        if(!error.cause) res.status(400).send(error.message)
+        else res.status(error.cause).send(error.message)
     }
 }
 
@@ -192,6 +221,8 @@ export async function deleteUserById(req, res) {
 export async function getAllUsers(req, res) {
     res.send(await UserModel.getAll());
 }
+
+
 
 
 

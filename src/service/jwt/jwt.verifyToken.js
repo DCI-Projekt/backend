@@ -10,11 +10,9 @@ import jwt from 'jsonwebtoken';
  * @param {Function} next - Die nächste Middleware- oder Route-Handler-Funktion
  */
 function verifyToken(req, res, next) {
-    //if (!req.headers.authorization) return res.status(401).send({success: false, message: 'Token missing'});
+    if (!req.cookies.access_token) return res.status(200).send({success: false, message: 'Token missing'});
     let cookieToken = req.cookies.access_token.split(' ')[1];
-    console.log("🚀 ~ file: jwt.verifyToken.js:16 ~ verifyToken ~ cookieToken:", cookieToken)
-    // let token = req.headers.authorization.split(' ')[1];
-    // console.log("🚀 ~ file: jwt.verifyToken.js:18 ~ verifyToken ~ token:", token)
+
 
     jwt.verify(cookieToken, process.env.JWT_SECRET, (err, payload) => {
 

@@ -64,6 +64,6 @@ export async function findById(id) {
         code: 404,
         message: `No such Role found: ${id}`
     };
-    return role.name;
+    return role;
 }
 
