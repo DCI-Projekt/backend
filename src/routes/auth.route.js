@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { validationResult } from 'express-validator';
 import { loginUser, refreshNewVerification, registerNewUser, verifyEmail } from "../controller/user.controller.js";
-import { getAllEvents, getEventsOfMonth, attendToEvent } from "../controller/event.controller.js";
+import { getAllEvents, getEventsOfMonth, attendToEvent, getEventById } from "../controller/event.controller.js";
 import { userValidationMiddleware } from '../service/validation/userValidationSchema.js';
 import verifyToken from "../service/jwt/jwt.verifyToken.js";
 import checkRole from "../service/authorization/checkRole.js";
+import authorizeUserOrAdmin from "../service/authorization/authorizeUserOrAdmin.js";
 
 
 // Benutzerdefinierte Middleware, um Validierungsfehler zu behandeln
@@ -50,7 +51,10 @@ authRouter.route('/events/:month')
     .get(verifyToken, getEventsOfMonth)
 
 authRouter.route('/events/attend/:id')
-    .patch(verifyToken, attendToEvent)
+    .patch(verifyToken, authorizeUserOrAdmin, attendToEvent)
+
+authRouter.route('/eventdetails/:id')
+    .get(verifyToken, authorizeUserOrAdmin, getEventById)
 
 authRouter.route('/status')
     .get(verifyToken, checkRole)

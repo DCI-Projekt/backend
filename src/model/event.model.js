@@ -97,6 +97,4 @@ export async function attendToEventById(eventId, userId){
     await event.save();
 
     return await findEventId(eventId);
-
-
 }

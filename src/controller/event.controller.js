@@ -2,8 +2,6 @@ import * as EventModel from "../model/event.model.js";
 
 export async function registerNewEvent(req, res) {
     let body = req.body;
-    console.log("🚀 ~ file: event.controller.js:5 ~ registerNewEvent ~ body:", body)
-
 
     try {
         // Die "insertNewEvent"-Funktion in "EventModel" wird aufgerufen, um ein neues Event zu erstellen
@@ -31,6 +29,22 @@ export async function getAllEvents(req, res) {
         else res.status(error.cause).send(error.message)
     }
 }
+
+export async function getEventById(req, res) {
+    let eventId = req.params.id
+    try {
+        let response = await EventModel.findEventId(eventId);
+        // Alle Events werden als Antwort an den Client gesendet
+        res.send(response)
+        
+    } catch (error) {
+        // Wenn ein Fehler auftritt, wird eine entsprechende Fehlermeldung an den Client gesendet
+        if(!error.cause) res.status(400).send(error.message)
+        else res.status(error.cause).send(error.message)
+    }
+}
+
+
 
 export async function getEventsOfMonth(req, res) {
     // Extrahiere den Monat aus dem URL Parameter und speichere ihn in der Variable "month"

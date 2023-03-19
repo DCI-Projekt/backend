@@ -73,7 +73,13 @@ export async function modifyUser(userId, body){
 export async function addEventToUser(eventId, userId) {
     let user = await findUserByUserId(userId);
 
-    if(!user) throw new Error(`User with ID: ${userId} not found!`)
+    if(!user) throw new Error(`User with ID: ${userId} not found!`, {cause: 404})
+
+    user.events.push(eventId);
+
+    await user.save();
+
+    return await findUserByUserId(userId);
 
 }
 
