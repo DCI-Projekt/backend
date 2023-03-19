@@ -44,6 +44,19 @@ export async function getEventById(req, res) {
     }
 }
 
+export async function getEventPreview(req, res) {
+    try {
+        let response = await EventModel.getPreview();
+        // Alle Events werden als Antwort an den Client gesendet
+        res.send(response)
+        
+    } catch (error) {
+        // Wenn ein Fehler auftritt, wird eine entsprechende Fehlermeldung an den Client gesendet
+        if(!error.cause) res.status(400).send(error.message)
+        else res.status(error.cause).send(error.message)
+    }
+}
+
 
 
 export async function getEventsOfMonth(req, res) {
@@ -104,8 +117,23 @@ export async function attendToEvent(req, res) {
     const eventId = req.params.id;
 
     try {
-        let response = await EventModel.attendToEventById(eventId, userId)
-        res.send(response);
+        await EventModel.attendToEventById(eventId, userId)
+        res.send({success: true});
+    } catch (error) {
+        // Wenn ein Fehler auftritt, wird eine entsprechende Fehlermeldung an den Client gesendet
+        if(!error.cause) res.status(400).send(error.message)
+        else res.status(error.cause).send(error.message)
+    }
+
+}
+
+export async function cancelUserEvent(req, res) {
+    const userId = req.tokenPayload.id;
+    const eventId = req.params.id;
+
+    try {
+        await EventModel.cancelUserEvent(eventId, userId)
+        res.send({success: true});
     } catch (error) {
         // Wenn ein Fehler auftritt, wird eine entsprechende Fehlermeldung an den Client gesendet
         if(!error.cause) res.status(400).send(error.message)

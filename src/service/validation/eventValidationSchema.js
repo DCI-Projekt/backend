@@ -17,7 +17,7 @@ export const eventValidationMiddleware = checkSchema({
 
     beginning: {
         in: ['body'],
-        isISO8601: true,
+        isString: true,
         bail: true,
         errorMessage: 'Invalid date format. Please use ISO 8601 format (e.g. YYYY-MM-DDTHH:mm:ss.sssZ).',
     },

@@ -23,6 +23,11 @@ export async function findUserByUserId(userId) {
     return await User.findOne({_id: userId}).populate('events');
 }
 
+export async function findUserEventsByUserId(userId) {
+    let result = await User.findOne({_id:userId}, ).select('roll events').populate('events');
+    return result.events
+}
+
 // Findet einen Benutzer anhand der E-Mail-Adresse
 export async function findUserByMail(email) {
     return await User.findOne({email: email}).populate('events');
@@ -72,15 +77,17 @@ export async function modifyUser(userId, body){
 
 export async function addEventToUser(eventId, userId) {
     let user = await findUserByUserId(userId);
-
     if(!user) throw new Error(`User with ID: ${userId} not found!`, {cause: 404})
 
     user.events.push(eventId);
 
     await user.save();
 
-    return await findUserByUserId(userId);
+    return await user.save();
+}
 
+export async function removeEventFromUser(eventId, userId) {
+    await User.findOneAndUpdate({_id: userId}, { $pull: { events: eventId } })
 }
 
 

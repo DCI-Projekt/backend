@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validationResult } from 'express-validator';
-import { loginUser, refreshNewVerification, registerNewUser, verifyEmail } from "../controller/user.controller.js";
-import { getAllEvents, getEventsOfMonth, attendToEvent, getEventById } from "../controller/event.controller.js";
+import { loginUser, refreshNewVerification, registerNewUser, verifyEmail, getUserEvents, logout } from "../controller/user.controller.js";
+import { getAllEvents, getEventsOfMonth, attendToEvent, cancelUserEvent, getEventById, getEventPreview } from "../controller/event.controller.js";
 import { userValidationMiddleware } from '../service/validation/userValidationSchema.js';
 import verifyToken from "../service/jwt/jwt.verifyToken.js";
 import checkRole from "../service/authorization/checkRole.js";
@@ -39,7 +39,12 @@ authRouter.route('/verify')
 authRouter.route('/reverify')
     .get(verifyToken, refreshNewVerification)
 
-//todo - modify own profil?
+authRouter.route('/userevents')
+    .get(verifyToken, getUserEvents)
+
+authRouter.route('/logout')
+    .get(verifyToken, logout)
+    
 
 //!-----EVENTS-----
 // Get all Events
@@ -50,8 +55,14 @@ authRouter.route('/events/all')
 authRouter.route('/events/:month')
     .get(verifyToken, getEventsOfMonth)
 
+authRouter.route('/eventpreview')
+    .get(getEventPreview)
+
 authRouter.route('/events/attend/:id')
-    .patch(verifyToken, authorizeUserOrAdmin, attendToEvent)
+    .get(verifyToken, authorizeUserOrAdmin, attendToEvent)
+
+authRouter.route('/events/cancel/:id')
+    .get(verifyToken, authorizeUserOrAdmin, cancelUserEvent)
 
 authRouter.route('/eventdetails/:id')
     .get(verifyToken, authorizeUserOrAdmin, getEventById)

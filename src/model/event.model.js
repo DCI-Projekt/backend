@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { addEventToUser, removeEventFromUser } from './user.model.js'
 
 // Event Schema
 
@@ -6,6 +7,8 @@ const eventSchema = mongoose.Schema({
     title: {type: String, required: true, unique: true},
     beginning: { type: Date, required: true},
     duration: { type: Number, required: true},
+    start: { type: String, required: true},
+    end: { type: String, required: true},
     description: {type: String, required: true},
     location: {type: String, required: true},
     participants: [{type: mongoose.Types.ObjectId, ref: 'User'}],
@@ -25,6 +28,10 @@ export async function findEventByEventTitle(eventTitle) {
 // DB-Funktion zum Abrufen eines bestimmten Event-Eintrags per Event-Titel
 export async function findEventId(eventId) {
     return await Event.findOne({_id: eventId}).populate('participants');
+}
+
+export async function getPreview() {
+    return await Event.find({}).select('roll title beginning start');
 }
 
 
@@ -87,14 +94,18 @@ export async function deleteEvent(eventId) {
 
 export async function attendToEventById(eventId, userId){
     let event = await findEventId(eventId);
-
     if(!event) throw new Error(`Event with ID: ${eventId} not found!`, {cause: 404})
 
     event.participants.push(userId);
 
-    addEventToUser(eventId, userId)
+    await addEventToUser(eventId, userId)
 
     await event.save();
 
     return await findEventId(eventId);
+}
+
+export async function cancelUserEvent(eventId, userId) {
+    await Event.findOneAndUpdate({_id: eventId}, { $pull: { participants: userId } })
+    await removeEventFromUser(eventId, userId);
 }

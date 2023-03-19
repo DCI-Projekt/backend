@@ -68,6 +68,20 @@ export async function registerNewUser(req, res) {
     }
 }
 
+export async function getUserEvents(req, res) {
+    const userId = req.tokenPayload.id;
+
+    try {
+        let user = await UserModel.findUserEventsByUserId(userId)
+        res.send(user);
+
+    } catch (error) {
+        if(!error.cause) res.status(400).send(error.message)
+        else res.status(error.cause).send(error.message)
+    }
+
+}
+
 // Funktion zum Einloggen eines Nutzers
 export async function loginUser(req, res, next) {
     let {login, password} = req.body;
@@ -98,7 +112,6 @@ export async function loginUser(req, res, next) {
                 name: user.username,
                 role: userRole.name
             }
-            console.log("🚀 ~ file: user.controller.js:101 ~ loginUser ~ payload:", payload)
 
             // Erstelle Token mit den Nutzerdaten
             const token = generateJsonWebToken(payload, duration);
@@ -122,6 +135,18 @@ export async function loginUser(req, res, next) {
 
     } catch (error) {
         // Fehlerbehandlung
+        if(!error.cause) res.status(400).send(error.message)
+        else res.status(error.cause).send(error.message)
+    }
+}
+
+export async function logout(req, res) {
+
+    try {
+        res.clearCookie('access_token');
+        res.send({success: true, message: 'Logged out successfully'});
+
+    } catch (error) {
         if(!error.cause) res.status(400).send(error.message)
         else res.status(error.cause).send(error.message)
     }
